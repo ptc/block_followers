@@ -25,12 +25,24 @@ def block_users
     puts "no bots detected, exiting..."
     exit
   end
-  
+
   to_be_blocked.each do |id|
     user = @client.user id
-    puts "block #{user.name} (#{user.screen_name})? [Yn]"
-    confirmation = gets.chomp
-    @client.block(id) if confirmation == "Y"
+    puts "#{user.name} (#{user.screen_name})"
+  end
+  puts "block all listed followers? [ALL|N]"
+  confirmation = gets.chomp
+  if confirmation == "ALL"
+    to_be_blocked.each do |id|
+      @client.block(id)
+    end
+  else
+    to_be_blocked.each do |id|
+      user = @client.user id
+      puts "block #{user.name} (#{user.screen_name})? [Yn]"
+      confirmation = gets.chomp
+      @client.block(id) if confirmation == "Y"
+    end
   end
 end
 
